@@ -10,17 +10,17 @@ public class Combat : MonoBehaviour
     public float lightRange = 1.2f;
     public float heavyRange = 1.5f;
 
-    // How long the player has to wait before attacking again
+    // Time between attacks
     public float attackCooldown = 0.4f;
 
     private float nextAttackTime = 0f;
 
-    // Used to tell which direction the player is facing
+    // Direction the player is facing
     public bool facingRight = true;
 
     void Update()
     {
-        // Make sure the player can attack again
+        // Don't allow another attack until the cooldown is finished
         if (Time.time < nextAttackTime)
         {
             return;
@@ -47,6 +47,7 @@ public class Combat : MonoBehaviour
             {
                 LightAttack();
             }
+
             if (Gamepad.current.buttonNorth.wasPressedThisFrame)
             {
                 HeavyAttack();
@@ -89,7 +90,6 @@ public class Combat : MonoBehaviour
                 {
                     damageScript.TakeDamage(damage);
 
-                    // Heavy attacks should knock the enemy back more
                     Knockback knockback = enemy.GetComponent<Knockback>();
 
                     if (knockback != null)
@@ -107,3 +107,18 @@ public class Combat : MonoBehaviour
             }
         }
     }
+
+    // Used to change which direction the player is facing
+    public void SetFacingDirection(bool right)
+    {
+        facingRight = right;
+    }
+
+    // Shows the attack range in the Unity editor
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, lightRange);
+
+        Gizmos.DrawWireSphere(transform.position, heavyRange);
+    }
+}
