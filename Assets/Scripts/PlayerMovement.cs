@@ -1,6 +1,7 @@
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditorInternal.ReorderableList;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -213,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = 0f;
 
         // Pressing A moves the player left.
-        if (Keyboard.current.aKey.isPressed)
+        if (Keyboard.current.aKey.isPressed || (Gamepad.current != null && Gamepad.current.leftStick.ReadValue().x < 0))
         {
             animator.SetBool("IsWalking", true);
             spriteRenderer.flipX = true;
@@ -221,12 +222,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Pressing D moves the player right.
-        else if (Keyboard.current.dKey.isPressed)
+        else if (Keyboard.current.dKey.isPressed || (Gamepad.current != null && Gamepad.current.leftStick.ReadValue().x > 0))
         {
             animator.SetBool("IsWalking", true);
             spriteRenderer.flipX = false;
             horizontalInput = 1f;
         }
+
+        //Defaults to idle animation if no movement
         else 
         {
             animator.SetBool("IsWalking", false);
@@ -376,7 +379,8 @@ public class PlayerMovement : MonoBehaviour
         // -----------------------------------------------------
 
         // If Space is pressed, remember the input.
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame ||
+            (Gamepad.current != null && (Gamepad.current.xButton.wasPressedThisFrame || Gamepad.current.yButton.wasPressedThisFrame)))
         {
             jumpBufferTimer = jumpBufferTime;
         }
@@ -417,7 +421,8 @@ public class PlayerMovement : MonoBehaviour
         // If Space is pressed while in the air and
         // the player has another jump available,
         // perform the second jump.
-        else if (Keyboard.current.spaceKey.wasPressedThisFrame &&
+        else if ((Keyboard.current.spaceKey.wasPressedThisFrame ||
+            (Gamepad.current != null && (Gamepad.current.xButton.wasPressedThisFrame || Gamepad.current.yButton.wasPressedThisFrame))) &&
                  !isGrounded &&
                  coyoteTimer <= 0 &&
                  jumpsRemaining > 0)
@@ -435,7 +440,8 @@ public class PlayerMovement : MonoBehaviour
         //
         // This creates a short hop when Space is tapped
         // and a higher jump when Space is held.
-        if (Keyboard.current.spaceKey.wasReleasedThisFrame &&
+        if ((Keyboard.current.spaceKey.wasReleasedThisFrame || 
+            (Gamepad.current != null && (Gamepad.current.xButton.wasReleasedThisFrame || Gamepad.current.yButton.wasReleasedThisFrame))) &&
             rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector2(
@@ -478,7 +484,7 @@ public class PlayerMovement : MonoBehaviour
         // 2. S is being held.
         // 3. The player is already moving downward.
         if (!isGrounded &&
-            Keyboard.current.sKey.isPressed &&
+            (Keyboard.current.sKey.isPressed || (Gamepad.current != null && (Gamepad.current.leftStick.ReadValue().y < 0))) &&
             rb.linearVelocity.y < 0)
         {
             // Keep horizontal movement the same,
