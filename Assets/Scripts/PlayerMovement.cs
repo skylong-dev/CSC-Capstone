@@ -1,8 +1,17 @@
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+    // Handles animation changes
+    public Animator animator;
+    // Handles sprite rendering
+    SpriteRenderer spriteRenderer;
+
+
+
     // =========================================================
     // GROUND MOVEMENT
     // Controls how fast the player moves on the ground.
@@ -149,6 +158,9 @@ public class PlayerMovement : MonoBehaviour
     {
         // Get the Rigidbody2D attached to the Player.
         rb = GetComponent<Rigidbody2D>();
+        
+        // Get the SpriteRenderer attached to the Player.
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Give the player their full number of jumps.
         jumpsRemaining = maxJumps;
@@ -203,14 +215,23 @@ public class PlayerMovement : MonoBehaviour
         // Pressing A moves the player left.
         if (Keyboard.current.aKey.isPressed)
         {
+            animator.SetBool("IsWalking", true);
+            spriteRenderer.flipX = true;
             horizontalInput = -1f;
         }
 
         // Pressing D moves the player right.
-        if (Keyboard.current.dKey.isPressed)
+        else if (Keyboard.current.dKey.isPressed)
         {
+            animator.SetBool("IsWalking", true);
+            spriteRenderer.flipX = false;
             horizontalInput = 1f;
         }
+        else 
+        {
+            animator.SetBool("IsWalking", false);
+        }
+
     }
 
 

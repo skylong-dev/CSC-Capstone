@@ -3,6 +3,17 @@ using UnityEngine.InputSystem;
 
 public class Player2Movement : MonoBehaviour
 {
+
+    // Handles animation changes
+    public Animator animator;
+
+    // Handles sprite rendering
+    SpriteRenderer spriteRenderer;
+
+
+
+
+
     // =========================================================
     // GROUND MOVEMENT
     // =========================================================
@@ -128,6 +139,9 @@ public class Player2Movement : MonoBehaviour
         // Find the Rigidbody2D attached to Player 2.
         rb = GetComponent<Rigidbody2D>();
 
+        // Get the SpriteRenderer attached to the Player.
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
         // Give Player 2 all available jumps.
         jumpsRemaining = maxJumps;
     }
@@ -181,13 +195,23 @@ public class Player2Movement : MonoBehaviour
         // Left Arrow moves Player 2 left.
         if (Keyboard.current.leftArrowKey.isPressed)
         {
+            animator.SetBool("IsWalking", true);
+            spriteRenderer.flipX = true;
             horizontalInput = -1f;
         }
 
         // Right Arrow moves Player 2 right.
-        if (Keyboard.current.rightArrowKey.isPressed)
+        else if (Keyboard.current.rightArrowKey.isPressed)
         {
+            animator.SetBool("IsWalking", true);
+            spriteRenderer.flipX = false;
             horizontalInput = 1f;
+        }
+
+        // Defaults to idle animation if no movement
+        else
+        {
+            animator.SetBool("IsWalking", false);
         }
     }
 
