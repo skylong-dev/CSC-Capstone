@@ -835,7 +835,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a9b016a7b2a11d48a8826c6757246c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player2Movement
-  animator: {fileID: 748152044}
   maxRunSpeed: 8
   groundAcceleration: 60
   groundDeceleration: 70
@@ -848,11 +847,11 @@ MonoBehaviour:
   coyoteTime: 0.12
   jumpBufferTime: 0.12
   fastFallSpeed: 18
-  groundCheck: {fileID: 59051074}
+  groundCheck: {fileID: 1802584641}
   groundCheckRadius: 0.15
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!95 &748152044
 Animator:
   serializedVersion: 7
@@ -1150,7 +1149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ac6f8449bae324abac84a7fd3d6e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  animator: {fileID: 2031132418}
   maxRunSpeed: 8
   groundAcceleration: 60
   groundDeceleration: 70
@@ -1167,7 +1165,7 @@ MonoBehaviour:
   groundCheckRadius: 0.15
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!95 &2031132418
 Animator:
   serializedVersion: 7
