@@ -1,18 +1,31 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-
 public class MainMenuManager : MonoBehaviour
 {
-    public void LoadScene(string sceneName)
+    // Scene names
+    public string loadingSceneName = "LoadingScreen";
+
+    // Play button
+    public void PlayGame()
     {
-        SceneManager.LoadScene(sceneName);
-
-
+        SceneManager.LoadScene(loadingSceneName);
     }
+
+    // Settings button
+    public void OpenSettings()
+    {
+        Debug.Log("Settings button clicked!");
+        // Open your settings panel here
+    }
+
+    // Quit button
     public void QuitGame()
     {
+        Debug.Log("Quitting game...");
+
         Application.Quit();
     }
 }
+
