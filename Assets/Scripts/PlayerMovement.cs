@@ -3,6 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private Animator _animator;
+                     private SpriteRenderer _spriteRenderer;
+
+
     // =========================================================
     // GROUND MOVEMENT
     // =========================================================
@@ -102,6 +106,8 @@ public class PlayerMovement : MonoBehaviour
         // Get Player 1's Rigidbody2D.
         rb = GetComponent<Rigidbody2D>();
 
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
         // Give Player 1 their starting jumps.
         jumpsRemaining = maxJumps;
 
@@ -141,18 +147,28 @@ public class PlayerMovement : MonoBehaviour
     void GetInput()
     {
         horizontalInput = 0f;
-
+        
         // A = move left.
         if (Keyboard.current.aKey.isPressed)
         {
             horizontalInput = -1f;
+            _spriteRenderer.flipX = true;
+            _animator.SetBool("IsWalking", true);
         }
 
         // D = move right.
         if (Keyboard.current.dKey.isPressed)
         {
             horizontalInput = 1f;
+            _spriteRenderer.flipX = false;
+            _animator.SetBool("IsWalking", true);
         }
+
+        if (!Keyboard.current.aKey.isPressed && !Keyboard.current.dKey.isPressed)
+        {
+            _animator.SetBool("IsWalking", false);
+        }
+
     }
 
 
