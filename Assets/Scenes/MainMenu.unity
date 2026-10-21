@@ -489,7 +489,6 @@ RectTransform:
   - {fileID: 317743202}
   - {fileID: 1374586686}
   - {fileID: 898529880}
-  - {fileID: 1687745422}
   - {fileID: 907657386}
   m_Father: {fileID: 1007218345}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -701,7 +700,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CYRPT CLASH
+  m_text: CRYPT CLASH
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1458,11 +1457,11 @@ Transform:
   m_GameObject: {fileID: 1687745421}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -734.5748, y: -373.4476, z: 0}
+  m_LocalPosition: {x: -0.05999756, y: 0.010009766, z: 10}
   m_LocalScale: {x: 1.0371614, y: 0.9368042, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 798945921}
+  m_Father: {fileID: 1961856414}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1687745423
 SpriteRenderer:
@@ -1798,6 +1797,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1007218345}
+  - {fileID: 1687745422}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1961856415
