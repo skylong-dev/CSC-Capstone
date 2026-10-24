@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class Combat : MonoBehaviour
 {
+    [SerializeField] private Animator _animator;
+
     // Basic attack settings
     public int lightDamage = 10;
     public int heavyDamage = 20;
@@ -58,6 +60,8 @@ public class Combat : MonoBehaviour
     void LightAttack()
     {
         nextAttackTime = Time.time + attackCooldown;
+
+        _animator.SetTrigger("Jab");
 
         Debug.Log("Light attack");
 

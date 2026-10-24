@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+    [SerializeField] private Transform facingPivot;
+
     [SerializeField] private Animator _animator;
                      private SpriteRenderer _spriteRenderer;
 
@@ -106,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         // Get Player 1's Rigidbody2D.
         rb = GetComponent<Rigidbody2D>();
 
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         // Give Player 1 their starting jumps.
         jumpsRemaining = maxJumps;
@@ -152,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
         if (Keyboard.current.aKey.isPressed)
         {
             horizontalInput = -1f;
-            _spriteRenderer.flipX = true;
+            facingPivot.localScale = new Vector3(-1f, 1f, 1f);
             _animator.SetBool("IsWalking", true);
         }
 
@@ -160,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
         if (Keyboard.current.dKey.isPressed)
         {
             horizontalInput = 1f;
-            _spriteRenderer.flipX = false;
+            facingPivot.localScale = new Vector3(1f, 1f, 1f);
             _animator.SetBool("IsWalking", true);
         }
 
