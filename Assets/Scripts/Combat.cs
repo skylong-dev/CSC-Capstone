@@ -13,12 +13,7 @@ public enum AttackVariation
     Forward,
     Backward,
     Up,
-    Down,
-    ForwardUp,
-    ForwardDown,
-    BackwardUp,
-    BackwardDown,
-    AirDive
+    Down
 }
 
 [System.Serializable]
@@ -43,7 +38,7 @@ public class AttackSettings
 public class Combat : MonoBehaviour
 {
     [Header("Attack Settings")]
-    public AttackSettings[] attackSettings = new AttackSettings[36];
+    public AttackSettings[] attackSettings = new AttackSettings[18];
     public float attackCooldown = 0.4f;
 
     private float nextAttackTime;
@@ -57,19 +52,16 @@ public class Combat : MonoBehaviour
     public LayerMask groundLayer;
 
     private bool isGrounded;
-
-    [Header("Direction Input")]
     private float horizontalInput;
     private float verticalInput;
 
-    private Rigidbody2D rb;
-
-    void Awake()
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        // Get the player's Rigidbody2D.
+        GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
         ReadDirectionInput();
         UpdateGrounded();
@@ -77,61 +69,97 @@ public class Combat : MonoBehaviour
         if (Time.time < nextAttackTime)
             return;
 
-        // Keyboard attacks: J = Light, K = Heavy
+        // Keyboard: J = Light, K = Heavy.
         if (Keyboard.current != null)
         {
             if (Keyboard.current.jKey.wasPressedThisFrame)
+            {
                 LightAttack();
+                return;
+            }
 
             if (Keyboard.current.kKey.wasPressedThisFrame)
+            {
                 HeavyAttack();
+                return;
+            }
         }
 
-        // Controller attacks:
-        // West button = Light, North button = Heavy
+        // Controller: West = Light, North = Heavy.
         if (Gamepad.current != null)
         {
             if (Gamepad.current.buttonWest.wasPressedThisFrame)
+            {
                 LightAttack();
+                return;
+            }
 
             if (Gamepad.current.buttonNorth.wasPressedThisFrame)
+            {
                 HeavyAttack();
+            }
         }
     }
 
-    void ReadDirectionInput()
+    private void ReadDirectionInput()
     {
         horizontalInput = 0f;
         verticalInput = 0f;
 
-        if (Keyboard.current == null)
-            return;
+        // Read keyboard directions.
+        if (Keyboard.current != null)
+        {
+            bool left =
+                Keyboard.current.aKey.isPressed ||
+                Keyboard.current.leftArrowKey.isPressed;
 
-        bool left =
-            Keyboard.current.aKey.isPressed ||
-            Keyboard.current.leftArrowKey.isPressed;
+            bool right =
+                Keyboard.current.dKey.isPressed ||
+                Keyboard.current.rightArrowKey.isPressed;
 
-        bool right =
-            Keyboard.current.dKey.isPressed ||
-            Keyboard.current.rightArrowKey.isPressed;
+            bool down =
+                Keyboard.current.sKey.isPressed ||
+                Keyboard.current.downArrowKey.isPressed;
 
-        bool down =
-            Keyboard.current.sKey.isPressed ||
-            Keyboard.current.downArrowKey.isPressed;
+            bool up =
+                Keyboard.current.wKey.isPressed ||
+                Keyboard.current.upArrowKey.isPressed;
 
-        bool up =
-            Keyboard.current.wKey.isPressed ||
-            Keyboard.current.upArrowKey.isPressed;
+            if (left != right)
+                horizontalInput = right ? 1f : -1f;
 
-        // Opposite directions cancel each other.
-        if (left != right)
-            horizontalInput = right ? 1f : -1f;
+            if (up != down)
+                verticalInput = up ? 1f : -1f;
+        }
 
-        if (up != down)
-            verticalInput = up ? 1f : -1f;
+        // Controller directions override keyboard directions
+        // when the controller stick or D-pad is being used.
+        if (Gamepad.current != null)
+        {
+            Vector2 stick = Gamepad.current.leftStick.ReadValue();
+            Vector2 dpad = Gamepad.current.dpad.ReadValue();
+
+            Vector2 controllerInput = dpad;
+
+            if (stick.magnitude > 0.25f)
+                controllerInput = stick;
+
+            if (controllerInput.magnitude > 0.25f)
+            {
+                horizontalInput =
+                    Mathf.Abs(controllerInput.x) > 0.25f
+                    ? Mathf.Sign(controllerInput.x)
+                    : 0f;
+
+                verticalInput =
+                    Mathf.Abs(controllerInput.y) > 0.25f
+                    ? Mathf.Sign(controllerInput.y)
+                    : 0f;
+            }
+        }
     }
 
-    void UpdateGrounded()
+    private void UpdateGrounded()
     {
         if (groundCheck == null)
         {
@@ -146,20 +174,21 @@ public class Combat : MonoBehaviour
         );
     }
 
-    void LightAttack()
+    private void LightAttack()
     {
         PerformAttack(AttackType.Light);
     }
 
-    void HeavyAttack()
+    private void HeavyAttack()
     {
         PerformAttack(AttackType.Heavy);
     }
 
-    void PerformAttack(AttackType type)
+    private void PerformAttack(AttackType type)
     {
         bool airAttack = !isGrounded;
-        AttackVariation variation = GetAttackVariation(airAttack);
+        AttackVariation variation =
+            GetAttackVariation(airAttack);
 
         AttackSettings settings = null;
 
@@ -180,9 +209,10 @@ public class Combat : MonoBehaviour
         if (settings == null)
         {
             Debug.LogWarning(
-                "Missing settings for " + type + " " +
+                "Missing attack settings: " + type + " " +
                 variation + (airAttack ? " Air" : " Ground")
             );
+
             return;
         }
 
@@ -196,70 +226,50 @@ public class Combat : MonoBehaviour
         CheckForEnemies(settings);
     }
 
-    AttackVariation GetAttackVariation(bool airAttack)
+    private AttackVariation GetAttackVariation(bool airAttack)
     {
-        // Use AirDive while falling and holding down.
-        if (airAttack &&
-            verticalInput < 0 &&
-            rb != null &&
-            rb.linearVelocity.y < -0.1f &&
-            horizontalInput == 0)
-        {
-            return AttackVariation.AirDive;
-        }
-
-        if (horizontalInput == 0 && verticalInput == 0)
-            return AttackVariation.Neutral;
-
-        if (horizontalInput > 0 && verticalInput > 0)
-            return AttackVariation.ForwardUp;
-
-        if (horizontalInput > 0 && verticalInput < 0)
-            return AttackVariation.ForwardDown;
-
-        if (horizontalInput < 0 && verticalInput > 0)
-            return AttackVariation.BackwardUp;
-
-        if (horizontalInput < 0 && verticalInput < 0)
-        {
-            // BackwardDown is included in the air list.
-            // The ground list has only eight variations.
-            return airAttack
-                ? AttackVariation.BackwardDown
-                : AttackVariation.Backward;
-        }
-
-        if (horizontalInput > 0)
-            return AttackVariation.Forward;
-
-        if (horizontalInput < 0)
-            return AttackVariation.Backward;
-
-        if (verticalInput > 0)
+        // Up and Down take priority over horizontal input.
+        if (verticalInput > 0f)
             return AttackVariation.Up;
 
-        return AttackVariation.Down;
+        if (verticalInput < 0f)
+            return AttackVariation.Down;
+
+        if (horizontalInput == 0f)
+            return AttackVariation.Neutral;
+
+        // Convert left/right input into forward/backward
+        // based on which direction the player is facing.
+        bool pressingForward =
+            (horizontalInput > 0f && facingRight) ||
+            (horizontalInput < 0f && !facingRight);
+
+        if (pressingForward)
+            return AttackVariation.Forward;
+
+        // Backward attacks are supported in the air.
+        // Ground attacks use the Neutral variation instead.
+        if (airAttack)
+            return AttackVariation.Backward;
+
+        return AttackVariation.Neutral;
     }
 
-    void CheckForEnemies(AttackSettings settings)
+    private void CheckForEnemies(AttackSettings settings)
     {
-        // Place the hitbox in front of the character.
+        // Put the hitbox in front of the player.
         float direction = facingRight ? 1f : -1f;
 
-        Vector2 hitboxCenter = (Vector2)transform.position +
+        Vector2 hitboxCenter =
+            (Vector2)transform.position +
             new Vector2(direction * settings.range * 0.5f, 0f);
 
-        // Move the hitbox upward or downward for vertical attacks.
-        if (settings.variation == AttackVariation.Up ||
-            settings.variation == AttackVariation.ForwardUp ||
-            settings.variation == AttackVariation.BackwardUp)
+        // Move the hitbox for vertical attacks.
+        if (settings.variation == AttackVariation.Up)
         {
             hitboxCenter.y += settings.hitboxSize.y * 0.5f;
         }
-        else if (settings.variation == AttackVariation.Down ||
-                 settings.variation == AttackVariation.ForwardDown ||
-                 settings.variation == AttackVariation.BackwardDown ||
-                 settings.variation == AttackVariation.AirDive)
+        else if (settings.variation == AttackVariation.Down)
         {
             hitboxCenter.y -= settings.hitboxSize.y * 0.5f;
         }
@@ -280,35 +290,34 @@ public class Combat : MonoBehaviour
             if (damageScript == null)
                 damageScript = enemy.GetComponentInParent<Damage>();
 
-            if (damageScript != null)
+            if (damageScript == null)
+                continue;
+
+            damageScript.TakeDamage(settings.damage);
+
+            Knockback knockback = enemy.GetComponent<Knockback>();
+
+            if (knockback == null)
+                knockback = enemy.GetComponentInParent<Knockback>();
+
+            if (knockback != null)
             {
-                damageScript.TakeDamage(settings.damage);
-
-                Knockback knockback = enemy.GetComponent<Knockback>();
-
-                if (knockback == null)
-                    knockback = enemy.GetComponentInParent<Knockback>();
-
-                if (knockback != null)
-                {
-                    knockback.ApplyKnockback(
-                        settings.horizontalKnockback,
-                        settings.verticalKnockback,
-                        facingRight
-                    );
-                }
+                knockback.ApplyKnockback(
+                    settings.horizontalKnockback,
+                    settings.verticalKnockback,
+                    facingRight
+                );
             }
         }
     }
 
-    // Call this from the movement script if it controls facing.
+    // Your movement script can call this when the player turns.
     public void SetFacingDirection(bool lookingRight)
     {
         facingRight = lookingRight;
     }
 
-    // Draw the ground check and attack area in the Scene view.
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
         {
