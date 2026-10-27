@@ -55,29 +55,29 @@ public class Combat : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
-    private void Awake()
-    {
-        // Get the player's Rigidbody2D.
-        GetComponent<Rigidbody2D>();
-    }
+    // Player 1 uses the first connected controller.
+    private Gamepad player1Controller;
 
     private void Update()
     {
+        UpdatePlayer1Controller();
         ReadDirectionInput();
         UpdateGrounded();
 
         if (Time.time < nextAttackTime)
             return;
 
-        // Keyboard: J = Light, K = Heavy.
+        // Keyboard controls.
         if (Keyboard.current != null)
         {
+            // J = Light Attack.
             if (Keyboard.current.jKey.wasPressedThisFrame)
             {
                 LightAttack();
                 return;
             }
 
+            // K = Heavy Attack.
             if (Keyboard.current.kKey.wasPressedThisFrame)
             {
                 HeavyAttack();
@@ -85,20 +85,22 @@ public class Combat : MonoBehaviour
             }
         }
 
-        // Controller: West = Light, North = Heavy.
-        if (Gamepad.current != null)
+        // Player 1 controller:
+        // X (Xbox) / Square (PlayStation) = Light Attack.
+        // No controller button is assigned to Heavy Attack.
+        if (player1Controller != null &&
+            player1Controller.buttonWest.wasPressedThisFrame)
         {
-            if (Gamepad.current.buttonWest.wasPressedThisFrame)
-            {
-                LightAttack();
-                return;
-            }
-
-            if (Gamepad.current.buttonNorth.wasPressedThisFrame)
-            {
-                HeavyAttack();
-            }
+            LightAttack();
         }
+    }
+
+    private void UpdatePlayer1Controller()
+    {
+        if (Gamepad.all.Count > 0)
+            player1Controller = Gamepad.all[0];
+        else
+            player1Controller = null;
     }
 
     private void ReadDirectionInput()
@@ -132,12 +134,15 @@ public class Combat : MonoBehaviour
                 verticalInput = up ? 1f : -1f;
         }
 
-        // Controller directions override keyboard directions
-        // when the controller stick or D-pad is being used.
-        if (Gamepad.current != null)
+        // Controller directional input overrides keyboard input
+        // when Player 1 moves the left stick or D-pad.
+        if (player1Controller != null)
         {
-            Vector2 stick = Gamepad.current.leftStick.ReadValue();
-            Vector2 dpad = Gamepad.current.dpad.ReadValue();
+            Vector2 stick =
+                player1Controller.leftStick.ReadValue();
+
+            Vector2 dpad =
+                player1Controller.dpad.ReadValue();
 
             Vector2 controllerInput = dpad;
 
@@ -187,6 +192,7 @@ public class Combat : MonoBehaviour
     private void PerformAttack(AttackType type)
     {
         bool airAttack = !isGrounded;
+
         AttackVariation variation =
             GetAttackVariation(airAttack);
 
@@ -228,7 +234,7 @@ public class Combat : MonoBehaviour
 
     private AttackVariation GetAttackVariation(bool airAttack)
     {
-        // Up and Down take priority over horizontal input.
+        // Up and Down take priority.
         if (verticalInput > 0f)
             return AttackVariation.Up;
 
@@ -238,8 +244,7 @@ public class Combat : MonoBehaviour
         if (horizontalInput == 0f)
             return AttackVariation.Neutral;
 
-        // Convert left/right input into forward/backward
-        // based on which direction the player is facing.
+        // Determine Forward and Backward relative to facing.
         bool pressingForward =
             (horizontalInput > 0f && facingRight) ||
             (horizontalInput < 0f && !facingRight);
@@ -247,8 +252,8 @@ public class Combat : MonoBehaviour
         if (pressingForward)
             return AttackVariation.Forward;
 
-        // Backward attacks are supported in the air.
-        // Ground attacks use the Neutral variation instead.
+        // Backward attacks are available in the air.
+        // Ground backward input falls back to Neutral.
         if (airAttack)
             return AttackVariation.Backward;
 
@@ -257,14 +262,12 @@ public class Combat : MonoBehaviour
 
     private void CheckForEnemies(AttackSettings settings)
     {
-        // Put the hitbox in front of the player.
         float direction = facingRight ? 1f : -1f;
 
         Vector2 hitboxCenter =
             (Vector2)transform.position +
             new Vector2(direction * settings.range * 0.5f, 0f);
 
-        // Move the hitbox for vertical attacks.
         if (settings.variation == AttackVariation.Up)
         {
             hitboxCenter.y += settings.hitboxSize.y * 0.5f;
@@ -311,7 +314,7 @@ public class Combat : MonoBehaviour
         }
     }
 
-    // Your movement script can call this when the player turns.
+    // Call this from the movement script when the player turns.
     public void SetFacingDirection(bool lookingRight)
     {
         facingRight = lookingRight;
