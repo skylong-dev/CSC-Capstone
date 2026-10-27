@@ -21,7 +21,7 @@ public class LoadingScreenController : MonoBehaviour
         loadingBar.maxValue = 1f;
         loadingBar.value = 0f;
 
-        StartCoroutine(LoadSceneAsync("MapSelection"));
+        StartCoroutine(LoadSceneAsync("CharacterSelect"));
     }
 
     IEnumerator LoadSceneAsync(string sceneName)

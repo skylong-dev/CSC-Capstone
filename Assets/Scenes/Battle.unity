@@ -2014,7 +2014,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.39, y: 0.64}
+    oldSize: {x: 1.13, y: 0.99}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2098,7 +2098,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4994611868154003898, guid: 34a1a557a0ec06646a8550e7e1a8f947, type: 3}
+  m_Sprite: {fileID: 3605578313848945866, guid: 1676e8cb2862f584ba6bb5f980f59790, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -2118,8 +2118,8 @@ Transform:
   m_GameObject: {fileID: 748152037}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 1, z: 0}
-  m_LocalScale: {x: 3.6733, y: 3.745849, z: 1}
+  m_LocalPosition: {x: 8.35, y: 0.25, z: 0}
+  m_LocalScale: {x: 3.2200148, y: 3.086954, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1802584641}
@@ -5380,13 +5380,158 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d912d4b6017e8949abf7cc7c632d7e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combat
-  _animator: {fileID: 879238878}
-  lightDamage: 10
-  heavyDamage: 20
-  lightRange: 1.2
-  heavyRange: 1.5
+  attackSettings:
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
+  - attackType: 0
+    variation: 0
+    isAirAttack: 0
+    damage: 10
+    range: 1.2
+    hitboxSize: {x: 1.2, y: 1}
+    horizontalKnockback: 5
+    verticalKnockback: 2
   attackCooldown: 0.4
   facingRight: 1
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2091721732
 GameObject:
   m_ObjectHideFlags: 0
